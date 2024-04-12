@@ -1,16 +1,15 @@
 import pandas as pd
-from MyCards import CardLookup
 from API.EDHRec import getData
 
 def search(commander):
 
 
-    df_collection = CardLookup()
+    df_collection = pd.read_csv('ScryfallData.csv', sep=';')
     df_commander = getData(commander)
     
     df = df_commander
     merge = pd.merge(df, df_collection, on=['name'], how='inner')
     print(merge)
-    merge.to_excel('SearchResults.xlsx')
+    merge.to_excel(r'DataOutput\SearchResults.xlsx')
 
-search('intet-the-dreamer')
+search('gavi-nest-warden')
