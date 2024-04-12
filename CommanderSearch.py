@@ -4,7 +4,7 @@ from API.EDHRec import getData
 def search(commander):
 
 
-    df_collection = pd.read_csv('ScryfallData.csv', sep=';')
+    df_collection = pd.read_csv(r'DataOutput\ScryfallData.csv', sep=';')
     df_commander = getData(commander)
     
     df = df_commander
