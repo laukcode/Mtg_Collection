@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import requests
+from os import path
 from API.Scryfall import getData
 
 
@@ -34,18 +35,24 @@ def CardLookup():
         folder_path = 'DataOutput\\CardImages\\'
         file_path = folder_path + set_code + '_' + ReplaceAll(name) + '.jpg'
 
-        try:
-            img = requests.get(img_url).content
-            with open(file_path, 'wb') as handler:
-                handler.write(img)
-        except:
-            print('Image not found for: ' + set_code + ' ' + name)
-
+        if path.isfile(file_path) is False:
+            try:
+                img = requests.get(img_url).content
+                with open(file_path, 'wb') as handler:
+                    handler.write(img)
+                print('Image downloaded for: ' + set_code + ' ' + name)
+            except:
+                print('Image not found for: ' + set_code + ' ' + name)
+        else: 
+            print('Image already exists for: ' + set_code + ' ' + name)
         # Create synced table
+        row.insert(56,'local_image_path', [file_path])
+        
         if i == 0:
             df = row
         else: 
             df = pd.concat([df, row])
+
         print('Scryfall data imported for Card: ' + name)
         time.sleep(0.1)
     
