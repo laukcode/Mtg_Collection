@@ -1,6 +1,17 @@
 import pandas as pd
 import time
+import requests
 from API.Scryfall import getData
+
+
+def ReplaceAll(name):
+    replaced = [' ',',',"'",'/']
+    for letter in replaced:
+        if letter == ' ':
+            name = name.replace(letter, '_')
+        else:
+            name = name.replace(letter, '')
+    return name
 
 def CardLookup():
 
@@ -14,6 +25,19 @@ def CardLookup():
         set_code = set_list[i]
         row = getData(name, set_code)
         
+        # Download Image
+        img_url = row['image_uris.normal'][0]
+        folder_path = 'DataOutput\\CardImages\\'
+        file_path = folder_path + set_code + '_' + ReplaceAll(name) + '.jpg'
+
+        try:
+            img = requests.get(img_url).content
+            with open(file_path, 'wb') as handler:
+                handler.write(img)
+        except:
+            print('Image not found for: ' + set_code + ' ' + name)
+
+        # Create synced table
         if i == 0:
             df = row
         else: 
