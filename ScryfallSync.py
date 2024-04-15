@@ -16,6 +16,7 @@ def ReplaceAll(name):
 def CardLookup():
 
     df = pd.read_csv(r'DataInput\my_cards.csv', sep=',', skiprows=1)
+    #df = pd.read_csv(r'DataInput\test_card.csv', sep=',', skiprows=1)
 
     name_list = df['Card Name'].tolist()
     set_list = df['Set Code'].tolist()
@@ -26,7 +27,10 @@ def CardLookup():
         row = getData(name, set_code)
         
         # Download Image
-        img_url = row['image_uris.normal'][0]
+        if 'image_uris.normal' in row:
+            img_url = row['image_uris.normal'][0]
+        else: img_url = 'https://cards.scryfall.io/normal/front/e/8/e88ae6bf-9c58-4543-ba66-19ea41d01e9b.jpg?1576384102'
+
         folder_path = 'DataOutput\\CardImages\\'
         file_path = folder_path + set_code + '_' + ReplaceAll(name) + '.jpg'
 
